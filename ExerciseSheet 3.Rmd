@@ -92,9 +92,49 @@ a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
     films without a title. Inspect the variable `film_rating`. What are
     the possible values and what do they mean? Create a factor variable
     for the film rating. Why is this appropriate?
+    
+### a)
+    
+```{r}
+library(tidyverse)
+
+# Load raw data
+pixar_films <- read_csv("data/raw/pixar_films_raw.csv")
+
+# Clean data - remove films without titles
+pixar_clean <- pixar_films %>%
+  filter(!is.na(film))
+```
+```{r}
+# Inspect film_rating variable
+unique(pixar_clean$film_rating)
 
 
-<!-- -->
+```
+
+Film rating meaning: Rating based on Motion Picture Association (MPA) film rating system (the dataset only includes "G" and "PG"):
+
+  1. G - General Audiences
+  2. PG - Parental Guidance Suggested
+  3. PG-13 - Parents Strongly Cautioned
+  4. R - Restricted
+
+```{r}
+# Create factor variable for film rating
+pixar_clean <- pixar_clean %>%
+  mutate(film_rating_factor = factor(film_rating,
+                                   levels = c("G", "PG", "PG-13", "R"),
+                                   ordered = TRUE))
+
+```
+
+
+<!-- --> Why factor is appropriate:
+
+  1. Film ratings are categorical with inherent ordering (G < PG < PG-13 < R)
+  2. Factors preserve this ordinal relationship for analysis and visualization
+  3. Prevents treating ratings as numeric values
+  4. Ensures proper handling in statistical models
 
 b)  Inspect the film titles manually. Which films form a film series? A
     film series can be identified by a common word in the titles of the
