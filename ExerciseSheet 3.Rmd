@@ -143,7 +143,7 @@ b)  Inspect the film titles manually. Which films form a film series? A
     
 ### b)
 
-Toy Story, Cars and the Incredibles form a series (Toy Story friom part 1 to 4, Cars from part 1 to 3, the Incredibles from part 1 to 2).
+Toy Story, Cars and the Incredibles form a series (Toy Story friom part 1 to 4, Cars from part 1 to 3, the Incredibles from part 1 to 2). Technically also Finding Nemo/ Dory and Monsters Inc./ University are series.
 
 ```{r}
 library(stringr)
@@ -207,7 +207,6 @@ combined_data <- pixar_clean %>%
 ```
 
 
-
 d)  Choose one of the variables representing the public response and
     create a bar plot for the films belonging to a series. Here are the
     details of the plot:
@@ -222,6 +221,48 @@ d)  Choose one of the variables representing the public response and
 
     What do you notice when comparing the scores of the films in a
     series? Do you see any patterns?
+    
+### d)
+
+```{r}
+# put series variable in the combined data
+combined_with_series <- combined_data %>%
+  mutate(
+    series = case_when(
+      str_detect(film, "Toy Story") ~ "Toy Story",
+      str_detect(film, "Cars") ~ "Cars",
+      str_detect(film, "Finding") ~ "Finding Nemo/Dory",
+      str_detect(film, "Incredibles") ~ "The Incredibles",
+      str_detect(film, "Monsters") ~ "Monsters Inc.",
+      TRUE ~ "Standalone"
+    )
+  ) %>%
+  filter(series != "Standalone") %>%
+  group_by(series) %>%
+  mutate(series_size = n()) %>%
+  filter(series_size > 1) %>%  # Only keep actual series
+  arrange(release_date) %>%   # Order by release date
+  ungroup()
+
+# create score plot with metacritic variable
+ggplot(combined_with_series,
+       aes(x = series,
+           y = metacritic,
+           fill = fct_inorder(film))) +  # Order by release date
+  geom_col(position = position_dodge(width = 0.8),
+           width = 0.7) +
+  labs(
+    title = "Metacritic Scores Across Pixar Film Series",
+    subtitle = "Ordered by release date within each series",
+    x = "Film Series",
+    y = "Metacritic Score (0-100)",
+    fill = "Film Title"
+  ) +
+  theme_minimal()
+```
+
+
+Observation: Usually the first part of a series is rated higher than the follow-ups.
 
 ## Exercise 4: Open Analysis (4 points)
 
