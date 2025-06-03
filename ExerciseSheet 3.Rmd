@@ -108,8 +108,6 @@ pixar_clean <- pixar_films %>%
 ```{r}
 # Inspect film_rating variable
 unique(pixar_clean$film_rating)
-
-
 ```
 
 Film rating meaning: Rating based on Motion Picture Association (MPA) film rating system (the dataset only includes "G" and "PG"):
@@ -142,6 +140,38 @@ b)  Inspect the film titles manually. Which films form a film series? A
     e.g. "Despicable Me" and "Despicable Me 2". Create a dataframe which
     displays a list of the different series with the titles of the films
     and how many films belong to the series. Output the dataframe.
+    
+### b)
+
+Toy Story, Cars and the Incredibles form a series (Toy Story friom part 1 to 4, Cars from part 1 to 3, the Incredibles from part 1 to 2).
+
+```{r}
+library(stringr)
+
+# create dataframe that lists how many films are part of a series
+pixar_series <- pixar_clean %>%
+  mutate(
+    series_name = case_when(
+      str_detect(film, "Toy Story") ~ "Toy Story",
+      str_detect(film, "Cars") ~ "Cars",
+      str_detect(film, "Finding") ~ "Finding Nemo/Dory",
+      str_detect(film, "Incredibles") ~ "The Incredibles",
+      str_detect(film, "Monsters") ~ "Monsters Inc.",
+      str_detect(film, "A Bug's Life") ~ "A Bug's Life",
+      TRUE ~ film 
+    )
+  ) %>%
+  group_by(series_name) %>%
+  summarize(
+    films = paste(film, collapse = ", "),
+    films_count = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(films_count), series_name)
+
+print(pixar_series)
+```
+
 
 c)  Load the `public_response` dataframe into R. Convert the
     `cinema_score` variable into a factor while ensuring the factor
