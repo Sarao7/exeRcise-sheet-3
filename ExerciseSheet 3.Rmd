@@ -292,8 +292,10 @@ download.file(url, destfile)
 
 c)  Put the name / title of the dataset and a link to it below.
 
--   Dataset Name: ...
--   Link: <https://github.com/owid/owid-datasets/>...
+### c)
+
+-   Dataset Name: Global CO₂ Emissions – CDIAC and UN Population
+-   Link: https://github.com/owid/owid-datasets/tree/master/datasets/Global%20CO2%20emissions%20-%20CDIAC%20and%20UN%20Population
 
 d)  Come up with a (research) question you want to answer with the data
     and briefly explain why you believe this is an interesting question
