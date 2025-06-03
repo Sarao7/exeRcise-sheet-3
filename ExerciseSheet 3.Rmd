@@ -304,7 +304,7 @@ d)  Come up with a (research) question you want to answer with the data
     
 ### d)  
 
-Research Question: How have global per capita CO₂ emissions changed from 1850 to 2020, and can we identify any long-term trends?
+Research Question: How have global per capita CO₂ emissions changed from 1850 to 2015, and can we identify any long-term trends?
 
 Why this is interesting: It reveals whether individuals globally are becoming more or less carbon-intensive over time — a critical question in climate change mitigation and policy planning.
 
@@ -326,7 +326,7 @@ co2_clean <- co2 %>%
     total_co2 = `CO2 emissions (CDIAC and UN Population)`,
     per_capita_co2 = `Per capita CO2 emissions (CDIAC and UN Population)`
   ) %>%
-  filter(Entity == "World", year >= 1850, year <= 2020)
+  filter(Entity == "World", year >= 1850, year <= 2015)
 
 # Inspect
 head(co2_clean)
@@ -342,7 +342,7 @@ ggplot(
   ) +
   geom_line(color = "steelblue", size = 1) +
   labs(
-    title = "Global Per Capita CO2 Emissions (1850–2020)",
+    title = "Global Per Capita CO2 Emissions (1850–2015)",
     x = "Year",
     y = "Tonnes CO2 per Person",
     caption = "Figure 1. Trends in global per capita CO2 emissions based on CDIAC and UN population data (Our World in Data)."
@@ -367,11 +367,48 @@ Yes, we can see CO2 emissions clearly increasing dramatically in this period.
 Can we identify any long-term trends?
 Eventhough CO2 emissions have increased globally since 1850, you can see a small indication of a trend in the different direction. Through renewable energy and degrowth politics this trend doesnt necessarily have to continue.
 
-
     
 f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
+
+### f)
+    
+```{r co2_plot, fig.cap="Figure: Global CO₂ emissions and per capita emissions from 1850 to 2015."}
+#duplicate dataset
+co2_f <- co2
+
+# Rename columns
+names(co2_f) <- c("Entity", "Year", "Total_CO2", "Per_Capita_CO2")
+
+# Reshape data to long format for ggplot
+co2_long <- pivot_longer(co2_f, 
+                         cols = c(Total_CO2, Per_Capita_CO2),
+                        names_to = "Type", 
+                        values_to = "Value")
+
+# Plot
+ggplot(
+  co2_long, 
+  aes(
+    x = Year, 
+    y = Value, 
+    color = Type
+    )
+  ) +
+  geom_line(size = 1.2) +
+  labs(
+    title = "Global Total vs. Per Capita CO2 Emissions (1850–2015)",
+       x = "Year",
+       y = "CO2 Emissions",
+       color = "Metric") +
+  scale_color_manual(
+    labels = c("Per Capita CO2 (tonnes)", "Total CO2 (billion tonnes)"),
+    values = c("Per_Capita_CO2" = "steelblue", "Total_CO2" = "firebrick")) +
+  theme_minimal()
+
+```
+
 
 ## Final Note
 
