@@ -304,7 +304,7 @@ d)  Come up with a (research) question you want to answer with the data
     
 ### d)  
 
-Research Question: How have global per capita CO₂ emissions changed from 1950 to 2020, and can we identify any long-term trends?
+Research Question: How have global per capita CO₂ emissions changed from 1850 to 2020, and can we identify any long-term trends?
 
 Why this is interesting: It reveals whether individuals globally are becoming more or less carbon-intensive over time — a critical question in climate change mitigation and policy planning.
 
@@ -312,6 +312,63 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
     You are **not expected** to use advanced statistical models or
     external packages which haven't been introduced.
+    
+### e)
+    
+```{r}
+# Read data
+co2 <- read_csv("Global CO2 emissions - CDIAC and UN Population.csv")
+
+# Rename for simplicity
+co2_clean <- co2 %>%
+  rename(
+    year = Year,
+    total_co2 = `CO2 emissions (CDIAC and UN Population)`,
+    per_capita_co2 = `Per capita CO2 emissions (CDIAC and UN Population)`
+  ) %>%
+  filter(Entity == "World", year >= 1850, year <= 2020)
+
+# Inspect
+head(co2_clean)
+
+```
+```{r}
+ggplot(
+  co2_clean, 
+  aes(
+    x = year, 
+    y = per_capita_co2
+    )
+  ) +
+  geom_line(color = "steelblue", size = 1) +
+  labs(
+    title = "Global Per Capita CO2 Emissions (1850–2020)",
+    x = "Year",
+    y = "Tonnes CO2 per Person",
+    caption = "Figure 1. Trends in global per capita CO2 emissions based on CDIAC and UN population data (Our World in Data)."
+  ) +
+  theme_minimal()
+
+```
+
+
+Interpretation:
+Per capita CO2 emissions have steadily increased from 1850 to about the 1970s.
+
+The fluctuations from 1920 - 1950 might be because of the reduced industrial production during the Great Depression and the destruction of means of production during World War 2.
+
+There's a plateau and slight decline post-2007, reflecting changes in energy efficiency, economic shifts, or climate policy impacts.
+
+The graph shows clear historical inflection points during global industrialization and energy transitions.
+
+How have global per capita CO₂ emissions changed from 1850 to 2020?
+Yes, we can see CO2 emissions clearly increasing dramatically in this period.
+
+Can we identify any long-term trends?
+Eventhough CO2 emissions have increased globally since 1850, you can see a small indication of a trend in the different direction. Through renewable energy and degrowth politics this trend doesnt necessarily have to continue.
+
+
+    
 f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
